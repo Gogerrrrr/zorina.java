@@ -80,6 +80,7 @@ public class RestaurantView extends JFrame {
         JButton statsBtn = createStyledButton("📊 Статистика", new Color(100, 150, 255));
         JButton kitchenBtn = createStyledButton("🍳 Взять блюдо", new Color(255, 200, 100));
         JButton orderBtn = createStyledButton("📝 Заказать", new Color(200, 100, 255));
+        JButton recordsBtn = createStyledButton("🏆 Рекорды", new Color(150, 100, 200)); // НОВАЯ КНОПКА
         JButton helpBtn = createStyledButton("❓ Помощь", new Color(255, 150, 100));
 
         JLabel scoreLabel = new JLabel("⭐ Счёт: 0");
@@ -107,6 +108,10 @@ public class RestaurantView extends JFrame {
             showOrderDialog();
             gamePanel.requestFocusInWindow();
         });
+        recordsBtn.addActionListener(e -> {
+            showRecordsDialog();
+            gamePanel.requestFocusInWindow();
+        });
         helpBtn.addActionListener(e -> {
             showHelp();
             gamePanel.requestFocusInWindow();
@@ -116,6 +121,7 @@ public class RestaurantView extends JFrame {
         buttonPanel.add(statsBtn);
         buttonPanel.add(kitchenBtn);
         buttonPanel.add(orderBtn);
+        buttonPanel.add(recordsBtn); // Добавляем новую кнопку
         buttonPanel.add(helpBtn);
         buttonPanel.add(scoreLabel);
         buttonPanel.add(moneyLabel);
@@ -274,6 +280,22 @@ public class RestaurantView extends JFrame {
         JOptionPane.showMessageDialog(this, kitchenInfo.toString(), "🍳 Кухня", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // НОВЫЙ МЕТОД для показа рекордов
+    private void showRecordsDialog() {
+        StringBuilder records = new StringBuilder();
+        records.append("🏆 ТАБЛИЦА РЕКОРДОВ\n\n");
+        records.append("Для просмотра полной таблицы\n");
+        records.append("проверьте консоль IDE.\n\n");
+        records.append("База данных: db/restaurant.db");
+
+        JOptionPane.showMessageDialog(this,
+                records.toString(),
+                "🏆 Рекорды",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        // Выводим топ-10 в консоль
+        GameRepository.getAllGameResults();
+    }
 
     private void showHelp() {
         String helpText = """

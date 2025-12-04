@@ -95,14 +95,42 @@ public class RestaurantController {
             @Override
             public void gameWon(RestaurantEvent e) {
                 gameTimer.stop();
-                JOptionPane.showMessageDialog(view, "🎉 ПОЗДРАВЛЯЕМ! ВЫ ВЫИГРАЛИ!\nФинальный счёт: " + model.getScore() + " очков\nФинальный капитал: $" + model.getMoney(), "🏆 ПОБЕДА!", JOptionPane.INFORMATION_MESSAGE);
+
+                // Сохраняем результат в БД
+                String playerName = JOptionPane.showInputDialog(view,
+                        "🎉 ПОБЕДА!\nВведите ваше имя для таблицы рекордов:",
+                        "🏆 ПОБЕДА!", JOptionPane.QUESTION_MESSAGE);
+
+                if (playerName == null || playerName.trim().isEmpty()) {
+                    playerName = "Снежок";
+                }
+
+                GameRepository.saveGameResult(playerName, model.getScore(), model.getMoney());
+
+                // Показываем топ-10 результатов
+                GameRepository.getAllGameResults();
+
+                JOptionPane.showMessageDialog(view,
+                        "🎉 ПОЗДРАВЛЯЕМ! ВЫ ВЫИГРАЛИ!\n" +
+                                "Финальный счёт: " + model.getScore() + " очков\n" +
+                                "Финальный капитал: $" + model.getMoney() + "\n\n" +
+                                "Результат сохранен в базе данных!",
+                        "🏆 ПОБЕДА!", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
 
             @Override
             public void gameOver(RestaurantEvent e) {
                 gameTimer.stop();
-                JOptionPane.showMessageDialog(view, "💀 ИГРА ОКОНЧЕНА! ВЫ ПРОИГРАЛИ!\nФинальный счёт: " + model.getScore() + " очков", "💥 ПРОИГРЫШ", JOptionPane.ERROR_MESSAGE);
+
+                // Сохраняем результат в БД
+                GameRepository.saveGameResult("Снежок", model.getScore(), model.getMoney());
+
+                JOptionPane.showMessageDialog(view,
+                        "💀 ИГРА ОКОНЧЕНА! ВЫ ПРОИГРАЛИ!\n" +
+                                "Финальный счёт: " + model.getScore() + " очков\n\n" +
+                                "Результат сохранен в базе данных.",
+                        "💥 ПРОИГРЫШ", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
         };

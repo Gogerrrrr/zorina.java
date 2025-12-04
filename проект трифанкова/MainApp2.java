@@ -3,6 +3,9 @@ import java.awt.*; // Добавляем этот импорт
 
 public class MainApp2 {
     public static void main(String[] args) {
+        // 1. Инициализируем базу данных
+        Database.initDatabase();
+
         SwingUtilities.invokeLater(() -> {
             // Показываем приветственное окно
             showWelcomeDialog();

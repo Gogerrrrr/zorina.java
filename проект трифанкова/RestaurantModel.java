@@ -108,6 +108,11 @@ public class RestaurantModel {
         }
     }
 
+    // Новый метод для сохранения заказа в БД
+    private void saveOrderToDatabase(String dishName, int price, Integer customerId, String status) {
+        GameRepository.saveOrder(dishName, price, customerId, status);
+    }
+
     // ПРОСТОЙ И НАДЕЖНЫЙ МЕТОД ДЛЯ ЗАКАЗА БЛЮДА
     public boolean placeOrderInKitchen(Dish dish) {
         System.out.println("🎯 НАЧАЛО: Пытаемся заказать " + dish.getName());
@@ -131,6 +136,9 @@ public class RestaurantModel {
         // Добавляем в очередь
         kitchenQueue.add(dish);
         cookingProgress.put(dish, 0);
+
+        // Сохраняем заказ в БД (заказ официанта)
+        saveOrderToDatabase(dish.getName(), dish.getPrice(), null, "заказано_официантом");
 
         System.out.println("✅ УСПЕХ: Заказали " + dish.getName() + " за " + dish.getPrice() + "$");
         System.out.println("📊 Очередь кухни: " + kitchenQueue.size() + " блюд");
@@ -162,6 +170,10 @@ public class RestaurantModel {
             // Добавляем в очередь (бесплатно для клиента)
             kitchenQueue.add(desiredDish);
             cookingProgress.put(desiredDish, 0);
+
+            // Сохраняем заказ в БД (заказ клиента)
+            saveOrderToDatabase(desiredDish.getName(), desiredDish.getPrice(),
+                    customer.hashCode(), "заказано_клиентом");
 
             System.out.println("📝 Принят заказ от клиента: " + desiredDish.getName());
             System.out.println("📊 Очередь кухни: " + kitchenQueue.size() + " блюд");
